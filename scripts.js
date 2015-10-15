@@ -4,6 +4,7 @@ var playerTotalCards = 2;
 var dealerTotalCards = 2;
 var playerHand;
 var dealerHand;
+var winCount = 0;
 
 
 function shuffleDeck(){
@@ -115,11 +116,15 @@ function checkWin(){
 	}
 	if(winner === 'player'){
 		document.getElementById('message').innerHTML = "You Win!";
+		winCount++;
 	}else if(winner === 'dealer'){
 		document.getElementById('message').innerHTML = "You Lose!";
+		winCount--;
 	}else if(winner === 'tie'){
 		document.getElementById('message').innerHTML = "Push!";
 	}
+	console.log(winCount);
+	document.getElementById('win-count').innerHTML = winCount;
 	
 }
 // This needs help with actually removing the cards that are in the slots after the first two...
@@ -130,9 +135,12 @@ function reset(){
 	dealerTotalCards = 2;
 	playerHand = [];
 	dealerHand = [];
-	for(i=0;i<=6;i++){
-		document.getElementsByClassName('card').innerHTML = "-";
-		document.getElementsByClassName('card').className = "empty";
+	var cards = document.getElementsByClassName('card');
+	for(i=0;i<cards.length;i++){
+		cards[i].className = cards[i].className + ' empty';
+		cards[i].innerHTML = '-';
+
+
 	}
 	document.getElementById('message').innerHTML = " ";
 }
