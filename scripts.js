@@ -66,6 +66,11 @@ function calculateTotal(hand, who){
 	var total = 0;
 	for(i=0;i<hand.length;i++){
 		var cardValue = Number(hand[i].slice(0,-1));
+		if(cardValue>10){
+			cardValue = 10
+		}else if((cardValue===1)&&(hand.length<=2)){
+			cardValue=11;
+		}
 		total += cardValue;
 	}
 	var idWhoToGet = who+'-total';
@@ -107,7 +112,7 @@ function hit(){
 }
 
 function stand(){
-	
+
 }
 
 
