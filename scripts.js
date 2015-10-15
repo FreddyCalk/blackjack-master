@@ -5,6 +5,7 @@ var dealerTotalCards = 2;
 var playerHand;
 var dealerHand;
 
+
 function shuffleDeck(){
 	var deck =[];
 	//fill our deck, in order (for now)
@@ -79,10 +80,12 @@ function calculateTotal(hand, who){
 	if(total>21){
 		bust(who);	
 	}
+	return total;
 }
 
 function deal(){
 // Shuffled deck from function shuffleDeck
+	reset();
 	deck = shuffleDeck();
 	playerHand=[deck[0],deck[2]];
 	dealerHand=[deck[1],deck[3]];
@@ -95,7 +98,45 @@ function deal(){
 
 	calculateTotal(playerHand, 'player');
 	calculateTotal(dealerHand, 'dealer');
+
 }
+function checkWin(){
+	var playerTotal = calculateTotal(playerHand,'player');
+	var dealerTotal = calculateTotal(dealerHand,'dealer');
+	var winner;
+	if(((playerTotal>dealerTotal)&&(playerTotal<=21))||((dealerTotal>21)&&(playerTotal<=21))){
+		// Player Wins!
+		winner = 'player';
+	}else if((playerTotal === dealerTotal)&&(playerTotal<=21)){
+		winner = 'tie';
+		// Push
+	}else{
+		winner = 'dealer';
+	}
+	if(winner === 'player'){
+		document.getElementById('message').innerHTML = "You Win!";
+	}else if(winner === 'dealer'){
+		document.getElementById('message').innerHTML = "You Lose!";
+	}else if(winner === 'tie'){
+		document.getElementById('message').innerHTML = "Push!";
+	}
+	
+}
+// This needs help with actually removing the cards that are in the slots after the first two...
+function reset(){
+	deck = [];
+	placeInDeck = 0;
+	playerTotalCards = 2;
+	dealerTotalCards = 2;
+	playerHand = [];
+	dealerHand = [];
+	for(i=0;i<=6;i++){
+		document.getElementsByClassName('card').innerHTML = "-";
+		document.getElementsByClassName('card').className = "empty";
+	}
+	document.getElementById('message').innerHTML = " ";
+}
+
 
 function hit(){
 	var slot;
@@ -112,7 +153,21 @@ function hit(){
 }
 
 function stand(){
-
+	var dealerHas = calculateTotal(dealerHand, 'dealer');
+	var slot;
+	while(dealerHas<17){
+		if(dealerTotalCards===2){slot = "three";}
+		else if(dealerTotalCards===3){slot = "four";}
+		else if(dealerTotalCards===4){slot = "five";}
+		else if(dealerTotalCards===5){slot = "six";}
+		
+		placeCard(deck[placeInDeck],'dealer',slot);
+		dealerHand.push(deck[placeInDeck]);
+		dealerHas = calculateTotal(dealerHand,'dealer');
+		placeInDeck++;
+		dealerTotalCards++;
+	}
+	checkWin();
 }
 
 
